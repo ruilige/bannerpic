@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .box{
+            width: 590px;
+            height: 470px;
+            margin: 20px auto;
+            position: relative;
+        }
+        ul,ol{
+            list-style: none;
+        }
+        ul li{
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+        ul li:nth-of-type(1){
+            display: block;
+        }
+        .prev,.next{
+            width: 30px;
+            height: 60px;
+            background-color: rgba(0,0,0,.3);
+            position: absolute;
+            top: 50%;
+            margin-top: -30px;
+            font-size: 25px;
+            color: #ffffff;
+            line-height: 60px;
+            text-align: center;
+            font-family: '黑体 ';
+            cursor: pointer;
+        }
+        .prev{
+            left: 0;
+        }
+        .next{
+            right: 0;
+        }
+        .prev:hover,.next:hover{
+            background-color: rgba(0,0,0,.5);
+        }
+        ol{
+            position: absolute;
+            bottom: 30px;
+            left: 50px;
+        }
+        ol li{
+            float: left;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right:10px;
+            border: 2px solid rgba(255, 255, 255, 0.67);
+        }
+        .active{
+            background-color: #fff;
+            border: 3px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <ul>
+    </ul>
+    <span class="prev"><</span>
+    <span class="next">></span>
+    <ol>
+
+    </ol>
+</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/1.4.0/jquery.js"></script>
+<script>
+    $(function () {
+        var index=0;
+        var timer=null;
+        var ulLi='';
+        var olLi='';
+
+        var data=['images/1.jpg',
+            'images/2.jpg',
+            'images/3.jpg',
+            'images/4.jpg',
+            'images/5.jpg',
+        ];
+        for(var i=0;i<data.length;i++){
+            console.log(data[1])
+            ulLi +='<li><img src="'+data[i]+'"></li>';
+            olLi +='<li></li>'
+        }
+
+        $('ul').html(ulLi)
+        $('ol').html(olLi)
+        $('ol li').eq(0).addClass('active');
+        console.log( $('ol li').eq(0))
+        function  play() {
+            index=index>data.length-1?0:index;
+            index=index<0?data.length-1:index;
+            $('ul li').eq(index).fadeIn().siblings().fadeOut();
+            $('ol li').eq(index).addClass('active').siblings().removeClass('active')
+        }
+        // 开启一个定时器，让他自己开始播放
+        timer=setInterval(function () {
+            index++;
+            play()
+        },5000)
+
+
+        $('ol li').mouseenter(function () {
+            index=$(this).index()
+            play()
+        });
+        // hover 的时候ul下面的li的时候，移入的时候清除定时器，离开的再设置定时器
+        $('ul  img').hover(function () {
+
+            clearInterval(timer)
+        },function () {
+            index++;
+            timer=setInterval(function () {
+                play()
+            },500)
+
+        });
+        // 点击上一张
+        $('.prev').stop().click(function () {
+            index--;
+            play()
+        });
+        $('.next').click(function () {
+            index++;
+            play()
+        });
+
+
+    })
+</script>
+</html>
